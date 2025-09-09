@@ -302,16 +302,16 @@
             const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
             onSnapshot(q, (snapshot) => {
-                messagesContainer.innerHTML = '';
-                
                 if (snapshot.empty) {
                     messagesContainer.innerHTML = '<div class="loading">No messages yet. Be the first to say hello!</div>';
                     return;
                 }
 
-                snapshot.forEach((doc) => {
-                    const message = doc.data();
-                    addMessageToChat(message);
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const message = change.doc.data();
+                        addMessageToChat(message);
+                    }
                 });
             }, (error) => {
                 console.error('Error listening to messages:', error);
