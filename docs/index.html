@@ -38,6 +38,79 @@
             margin-top: 0.5rem;
         }
 
+        .username-setup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .username-form {
+            background: white;
+            border: 3px solid black;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .username-form h2 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .username-form p {
+            margin-bottom: 1.5rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .username-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid black;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+        }
+
+        .username-input:focus {
+            background: #f9f9f9;
+        }
+
+        .username-button {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid black;
+            background: white;
+            color: black;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .username-button:hover {
+            background: black;
+            color: white;
+        }
+
+        .username-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .username-error {
+            color: #c62828;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
         .chat-container {
             flex: 1;
             display: flex;
@@ -143,6 +216,10 @@
             text-align: center;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         @media (max-width: 600px) {
             .chat-container {
                 border-left: none;
@@ -156,10 +233,32 @@
             .send-button {
                 width: 100%;
             }
+
+            .username-form {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Username Setup Modal -->
+    <div class="username-setup" id="usernameSetup">
+        <div class="username-form">
+            <h2>Welcome to Group Chat!</h2>
+            <p>Choose a username to join the conversation. This will be your identity for this chat session.</p>
+            <input 
+                type="text" 
+                id="usernameInput" 
+                class="username-input" 
+                placeholder="Enter your username..."
+                maxlength="20"
+            >
+            <div class="username-error" id="usernameError"></div>
+            <button id="joinChatButton" class="username-button">Join Chat</button>
+        </div>
+    </div>
+
     <div class="header">
         <h1>Group Chat</h1>
         <div class="username-display" id="usernameDisplay">Connecting...</div>
@@ -209,26 +308,60 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Generate random username
-        const adjectives = ['Happy', 'Cool', 'Smart', 'Funny', 'Brave', 'Kind', 'Wise', 'Bright', 'Swift', 'Calm'];
-        const nouns = ['Tiger', 'Eagle', 'Dolphin', 'Wolf', 'Fox', 'Bear', 'Lion', 'Hawk', 'Shark', 'Panda'];
-        const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-        const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-        const randomNumber = Math.floor(Math.random() * 99) + 1;
-        const username = `${randomAdjective}${randomNoun}${randomNumber}`;
-
         // DOM elements
+        const usernameSetup = document.getElementById('usernameSetup');
+        const usernameInput = document.getElementById('usernameInput');
+        const joinChatButton = document.getElementById('joinChatButton');
+        const usernameError = document.getElementById('usernameError');
         const messagesContainer = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
         const usernameDisplay = document.getElementById('usernameDisplay');
 
-        // Display username
-        usernameDisplay.textContent = `You are: ${username}`;
+        let username = '';
 
-        // Enable input and button
-        messageInput.disabled = false;
-        sendButton.disabled = false;
+        // Validate username
+        function validateUsername(name) {
+            const trimmed = name.trim();
+            if (trimmed.length === 0) {
+                return 'Username cannot be empty';
+            }
+            if (trimmed.length < 2) {
+                return 'Username must be at least 2 characters';
+            }
+            if (trimmed.length > 20) {
+                return 'Username must be 20 characters or less';
+            }
+            if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
+                return 'Username can only contain letters, numbers, underscores, and dashes';
+            }
+            return null;
+        }
+
+        // Join chat with username
+        function joinChat() {
+            const inputValue = usernameInput.value.trim();
+            const error = validateUsername(inputValue);
+            
+            if (error) {
+                usernameError.textContent = error;
+                return;
+            }
+
+            username = inputValue;
+            usernameDisplay.textContent = `You are: ${username}`;
+            
+            // Hide username setup
+            usernameSetup.classList.add('hidden');
+            
+            // Enable chat interface
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            messageInput.focus();
+            
+            // Initialize chat
+            setupMessageListener();
+        }
 
         // Format timestamp
         function formatTimestamp(timestamp) {
@@ -307,6 +440,11 @@
                     return;
                 }
 
+                // Clear loading message
+                if (messagesContainer.querySelector('.loading')) {
+                    messagesContainer.innerHTML = '';
+                }
+
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         const message = change.doc.data();
@@ -319,7 +457,16 @@
             });
         }
 
-        // Event listeners
+        // Username setup event listeners
+        joinChatButton.addEventListener('click', joinChat);
+        usernameInput.addEventListener('keypress', (e) => {
+            usernameError.textContent = ''; // Clear error on typing
+            if (e.key === 'Enter') {
+                joinChat();
+            }
+        });
+
+        // Chat event listeners
         sendButton.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -327,9 +474,8 @@
             }
         });
 
-        // Initialize
-        setupMessageListener();
-        messageInput.focus();
+        // Initialize - focus on username input
+        usernameInput.focus();
     </script>
 </body>
 </html>
