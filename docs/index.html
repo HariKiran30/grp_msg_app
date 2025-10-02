@@ -19,6 +19,126 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background 0.3s, color 0.3s; /* Transition for Dark Mode */
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: #121212;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .header {
+            background: #1e1e1e;
+            border-bottom-color: #e0e0e0;
+        }
+
+        .dark-mode .header h1 {
+            color: #fff;
+        }
+
+        .dark-mode .username-display, .dark-mode .notification-status {
+            color: #a0a0a0;
+        }
+        
+        .dark-mode .username-setup {
+            background: rgba(18, 18, 18, 0.95);
+        }
+
+        .dark-mode .username-form {
+            background: #1e1e1e;
+            border-color: #e0e0e0;
+        }
+        
+        .dark-mode .username-form h2 {
+            color: #fff;
+        }
+        
+        .dark-mode .username-form p, .dark-mode .avatar-label {
+            color: #a0a0a0;
+        }
+
+        .dark-mode .username-input {
+            background: #333;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .username-input:focus {
+            background: #444;
+        }
+        
+        .dark-mode .select-avatar-btn, .dark-mode .username-button {
+            background: #333;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .select-avatar-btn:hover {
+            background: #444;
+        }
+
+        .dark-mode .username-button:hover {
+            background: #e0e0e0;
+            color: #1e1e1e;
+        }
+
+        .dark-mode .chat-container {
+            border-left-color: #333;
+            border-right-color: #333;
+        }
+
+        .dark-mode .messages {
+            background: #121212;
+        }
+
+        .dark-mode .message {
+            background: #282828;
+            border-color: #444;
+        }
+        
+        .dark-mode .message:hover {
+            background: #3a3a3a;
+        }
+
+        .dark-mode .sender {
+            color: #fff;
+        }
+
+        .dark-mode .message-header {
+            color: #a0a0a0;
+        }
+        
+        .dark-mode .input-container {
+            background: #1e1e1e;
+            border-top-color: #333;
+        }
+        
+        .dark-mode .message-input {
+            background: #282828;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .send-button, .dark-mode .image-button, .dark-mode .emoji-button {
+            background: #333;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        .dark-mode .send-button:hover:not(:disabled), .dark-mode .image-button:hover:not(:disabled), .dark-mode .emoji-button:hover:not(:disabled) {
+            background: #e0e0e0;
+            color: #1e1e1e;
+        }
+        
+        .dark-mode .emoji-picker-modal {
+            background: #282828;
+            border-color: #444;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .emoji-item:hover {
+            background: #3a3a3a;
         }
 
         /* Header */
@@ -28,6 +148,9 @@
             text-align: center;
             background: white;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* For the toggle button */
         }
 
         .header h1 {
@@ -47,7 +170,33 @@
             margin-top: 0.3rem;
         }
 
-        /* Setup Modal & Form */
+        /* NEW: Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: 2px solid transparent;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: black;
+            z-index: 11;
+        }
+
+        .dark-mode-toggle:hover {
+            color: #007bff;
+        }
+        
+        .dark-mode .dark-mode-toggle {
+            color: white;
+        }
+        
+        .dark-mode .dark-mode-toggle:hover {
+             color: #007bff;
+        }
+
+        /* Setup Modal & Form (Existing Styles) */
         .username-setup {
             position: fixed;
             top: 0;
@@ -59,7 +208,6 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            /* Added for smooth join transition */
             opacity: 1;
             transition: opacity 0.5s ease;
         }
@@ -76,12 +224,10 @@
             max-width: 400px;
             width: 90%;
             text-align: center;
-            /* Animation for the form itself */
             transform: scale(1);
             transition: transform 0.5s ease;
         }
         
-        /* Keyframe for the form exiting */
         @keyframes fadeOutZoom {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1.05); }
@@ -111,7 +257,7 @@
             background: #f9f9f9;
         }
 
-        /* NEW: Avatar Styles */
+        /* Avatar Styles (Existing Styles) */
         .avatar-upload-section {
             display: flex;
             flex-direction: column;
@@ -194,6 +340,7 @@
             overflow-y: auto;
             padding: 1rem;
             background: white;
+            scroll-behavior: smooth;
         }
 
         .message {
@@ -203,6 +350,12 @@
             background: white;
             border-radius: 0;
             animation: fadeIn 0.3s ease-in;
+            position: relative; /* For reply button */
+            transition: background 0.2s;
+        }
+        
+        .message:hover {
+            background: #f9f9f9;
         }
 
         @keyframes fadeIn {
@@ -216,7 +369,7 @@
             }
         }
         
-        /* NEW: Bounce Animation for new messages */
+        /* Bounce Animation for new messages (Existing) */
         .message.new-message {
             animation: messageBounce 0.4s ease-out;
         }
@@ -236,7 +389,7 @@
             color: #666;
         }
         
-        /* NEW: Sender Info with Avatar */
+        /* Sender Info with Avatar (Existing) */
         .sender-info {
             display: flex;
             align-items: center;
@@ -255,6 +408,10 @@
             font-weight: 600;
             color: black;
         }
+        
+        .dark-mode .sender {
+            color: #e0e0e0;
+        }
 
         .timestamp {
             font-size: 0.7rem;
@@ -265,7 +422,107 @@
             line-height: 1.4;
             word-wrap: break-word;
         }
+        
+        /* NEW: Reply Container */
+        .reply-container {
+            border-left: 3px solid #007bff;
+            padding-left: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            background: #f0f8ff; /* Light background for visibility */
+            padding: 0.3rem 0.5rem;
+            transition: background 0.2s;
+        }
+        
+        .dark-mode .reply-container {
+             background: #3a3a5e;
+             border-left-color: #7abaff;
+        }
+        
+        .reply-container:hover {
+            background: #e6f2ff;
+        }
+        
+        .dark-mode .reply-container:hover {
+            background: #4a4a70;
+        }
 
+        .reply-sender {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #007bff;
+            display: block;
+        }
+
+        .reply-snippet {
+            font-size: 0.9rem;
+            color: #444;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        
+        .dark-mode .reply-snippet {
+            color: #ccc;
+        }
+
+        /* NEW: Reply Button */
+        .reply-button {
+            position: absolute;
+            top: 0.3rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.2s, color 0.2s;
+            color: #666;
+        }
+
+        .message:hover .reply-button {
+            opacity: 1;
+        }
+
+        .reply-button:hover {
+            color: #007bff;
+        }
+        
+        /* NEW: Reply Banner above input */
+        .reply-banner {
+            background: #e6f2ff;
+            border: 1px solid #007bff;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .reply-banner {
+            background: #3a3a5e;
+            border-color: #7abaff;
+            color: #e0e0e0;
+        }
+
+        .reply-banner-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
+        }
+
+        .reply-banner-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        /* ... (rest of your existing styles for images, input, etc.) ... */
         .message-image {
             margin-top: 0.5rem;
             max-width: 100%;
@@ -278,7 +535,6 @@
             transform: scale(1.02);
         }
 
-        /* ... (rest of your existing styles for image preview, input, etc.) ... */
         .image-preview {
             margin-top: 0.5rem;
             padding: 0.5rem;
@@ -317,7 +573,7 @@
             border-top: 2px solid black;
             padding: 1rem;
             background: white;
-            position: relative; /* For emoji picker positioning */
+            position: relative; 
         }
 
         .input-row {
@@ -343,7 +599,7 @@
 
         .button-group {
             display: flex;
-            flex-direction: row; /* Changed to row for compact buttons */
+            flex-direction: row;
             gap: 0.5rem;
         }
 
@@ -359,7 +615,7 @@
         }
         
         .emoji-button {
-             padding: 0.75rem 0.5rem; /* Smaller button for emoji */
+             padding: 0.75rem 0.5rem;
              font-size: 1.2rem;
         }
 
@@ -373,10 +629,10 @@
             cursor: not-allowed;
         }
 
-        /* NEW: Emoji Picker Modal */
+        /* Emoji Picker Modal (Existing) */
         .emoji-picker-modal {
             position: absolute;
-            bottom: 100%; /* Position above the input container */
+            bottom: 100%;
             right: 0;
             width: 320px;
             max-height: 250px;
@@ -413,7 +669,6 @@
             display: none !important;
         }
         
-        /* ... (rest of your existing styles like loading, error, etc.) ... */
         .loading {
             text-align: center;
             padding: 2rem;
@@ -459,6 +714,11 @@
                 left: 0;
                 right: 0;
             }
+            
+            .dark-mode-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -493,7 +753,7 @@
         <h1>Group Chat 💬</h1>
         <div class="username-display" id="usernameDisplay">Connecting...</div>
         <div class="notification-status" id="notificationStatus"></div>
-    </div>
+        <button id="darkModeToggle" class="dark-mode-toggle">🌙</button> </div>
 
     <div class="chat-container">
         <div class="messages" id="messages">
@@ -501,7 +761,7 @@
         </div>
         
         <div class="input-container">
-            <div id="imagePreviewContainer"></div>
+            <div id="replyBannerContainer"></div> <div id="imagePreviewContainer"></div>
             
             <div class="emoji-picker-modal" id="emojiPickerModal">
                 </div>
@@ -573,11 +833,13 @@
         const emojiButton = document.getElementById('emojiButton');
         const emojiPickerModal = document.getElementById('emojiPickerModal');
         const usernameForm = document.getElementById('usernameForm');
+        const darkModeToggle = document.getElementById('darkModeToggle'); // NEW
+        const replyBannerContainer = document.getElementById('replyBannerContainer'); // NEW
 
         // State variables
         let username = '';
-        let currentUserAvatarUrl = ''; // NEW: Store avatar URL
-        let selectedAvatarFile = null; // NEW: Store avatar file object
+        let currentUserAvatarUrl = '';
+        let selectedAvatarFile = null;
         let notificationsEnabled = false;
         let isTabActive = true;
         let unreadCount = 0;
@@ -585,7 +847,8 @@
         let selectedImageFile = null;
         let isUploading = false;
         const originalTitle = 'Group Chat';
-        
+        let currentReplyTo = null; // NEW: Holds { docId, sender, snippet }
+
         // NEW: Emojis for the picker
         const commonEmojis = [
             '😀', '😂', '😍', '🤔', '🥳', '😎',
@@ -594,14 +857,32 @@
             '💡', '✅', '❌', '🍕', '🍔', '☕'
         ];
 
-        // --- NEW: AVATAR & EMOJI LOGIC ---
+        // --- NEW: DARK MODE LOGIC ---
+
+        function setDarkMode(isDark) {
+            document.body.classList.toggle('dark-mode', isDark);
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Load preference on startup
+        const savedMode = localStorage.getItem('darkMode');
+        setDarkMode(savedMode === 'enabled');
+
+        // Toggle logic
+        darkModeToggle.addEventListener('click', () => {
+            const isCurrentlyDark = document.body.classList.contains('dark-mode');
+            setDarkMode(!isCurrentlyDark);
+        });
+
+        // --- NEW: AVATAR & EMOJI LOGIC (Existing) ---
 
         selectAvatarButton.addEventListener('click', () => avatarFileInput.click());
 
         avatarFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
-                if (file.size > 5 * 1024 * 1024) { // Limit avatar size to 5MB
+                if (file.size > 5 * 1024 * 1024) { 
                     alert('Avatar image too large! Please choose an image under 5MB.');
                     avatarFileInput.value = '';
                     selectedAvatarFile = null;
@@ -634,20 +915,18 @@
         setupEmojiPicker();
 
         emojiButton.addEventListener('click', (e) => {
-             e.stopPropagation(); // Prevent document click listener from firing immediately
+             e.stopPropagation();
             emojiPickerModal.classList.toggle('visible');
         });
         
-        // Close emoji picker when clicking outside
         document.addEventListener('click', (e) => {
             if (!emojiPickerModal.contains(e.target) && e.target !== emojiButton) {
                 emojiPickerModal.classList.remove('visible');
             }
         });
 
-        // --- CORE CHAT FUNCTIONS (MODIFIED) ---
+        // --- CORE CHAT FUNCTIONS (MODIFIED for Reply Logic) ---
 
-        // Upload image to ImgBB (used for both message images and avatars)
         async function uploadImageToImgBB(file) {
             const formData = new FormData();
             formData.append('image', file);
@@ -665,7 +944,6 @@
             return data.data.url;
         }
 
-        // Join chat with username (MODIFIED)
         async function joinChat() {
             const inputValue = usernameInput.value.trim();
             const error = validateUsername(inputValue);
@@ -675,7 +953,6 @@
                 return;
             }
             
-            // NEW: Upload avatar if selected
             if (selectedAvatarFile) {
                 joinChatButton.disabled = true;
                 joinChatButton.textContent = 'Uploading Profile...';
@@ -683,7 +960,7 @@
                     currentUserAvatarUrl = await uploadImageToImgBB(selectedAvatarFile);
                 } catch (e) {
                     usernameError.textContent = 'Failed to upload profile picture. Joining without image.';
-                    currentUserAvatarUrl = ''; // Clear URL if upload failed
+                    currentUserAvatarUrl = '';
                 }
             }
 
@@ -692,7 +969,6 @@
             
             await requestNotificationPermission();
             
-            // NEW: Join animation
             usernameForm.style.animation = 'fadeOutZoom 0.5s forwards'; 
             setTimeout(() => {
                 usernameSetup.classList.add('hidden');
@@ -701,9 +977,8 @@
             messageInput.disabled = false;
             sendButton.disabled = false;
             imageButton.disabled = false;
-            emojiButton.disabled = false; // NEW
+            emojiButton.disabled = false;
             
-            // Re-enable button here in case of non-fatal avatar upload error
             joinChatButton.disabled = false;
             joinChatButton.textContent = 'Join Chat'; 
             
@@ -711,7 +986,6 @@
             setupMessageListener();
         }
 
-        // Format timestamp (existing function)
         function formatTimestamp(timestamp) {
             if (!timestamp) return 'Just now';
             const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -722,19 +996,53 @@
             }).format(date);
         }
 
-        // Add message to chat (MODIFIED)
-        function addMessageToChat(message, isNew = false) {
+        // NEW: Function to scroll to a message
+        window.scrollToMessage = function(docId) {
+            const target = document.querySelector(`[data-doc-id="${docId}"]`);
+            if (target) {
+                messagesContainer.scrollTop = target.offsetTop - messagesContainer.offsetTop;
+                target.style.outline = '2px solid #007bff';
+                target.style.outlineOffset = '2px';
+                setTimeout(() => {
+                    target.style.outline = 'none';
+                    target.style.outlineOffset = '0';
+                }, 2000);
+            }
+        }
+        
+        // NEW: Function to set up the reply
+        window.startReply = function(docId, sender, text) {
+            const snippet = (text || '... image/empty message ...').replace(/\s+/g, ' ').trim().substring(0, 50) + '...';
+            currentReplyTo = { docId, sender, snippet };
+            
+            replyBannerContainer.innerHTML = `
+                <div class="reply-banner">
+                    <span class="reply-banner-text">Replying to <b>${sender}</b>: ${snippet}</span>
+                    <button class="reply-banner-close" onclick="window.clearReply()">✕</button>
+                </div>
+            `;
+            messageInput.focus();
+        }
+
+        // NEW: Function to clear the reply state
+        window.clearReply = function() {
+            currentReplyTo = null;
+            replyBannerContainer.innerHTML = '';
+            messageInput.focus();
+        }
+
+        function addMessageToChat(message, docId, isNew = false) {
             const messageElement = document.createElement('div');
             messageElement.className = 'message';
-            
+            messageElement.setAttribute('data-doc-id', docId); // NEW: Set Document ID for replies
+
             const isOwnMessage = message.sender === username;
             
             if (isOwnMessage) {
                 messageElement.style.borderColor = '#007bff';
-                messageElement.style.backgroundColor = '#f0f8ff';
+                messageElement.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#2e2e4e' : '#f0f8ff';
             }
             
-            // NEW: Apply bounce animation for new messages
             if (isNew) {
                 messageElement.classList.add('new-message');
                 setTimeout(() => messageElement.classList.remove('new-message'), 400);
@@ -752,10 +1060,23 @@
                 imageHTML = `<img src="${message.imageUrl}" class="message-image" alt="Shared image" onclick="window.showFullImage('${message.imageUrl}')">`;
             }
 
-            // NEW: Avatar HTML
             const avatarHTML = message.avatarUrl ? 
                 `<img src="${message.avatarUrl}" class="avatar" alt="${message.sender} avatar">` : 
                 ''; 
+                
+            // NEW: Reply HTML
+            let replyHTML = '';
+            if (message.replyTo) {
+                replyHTML = `
+                    <div class="reply-container" onclick="window.scrollToMessage('${message.replyTo.docId}')">
+                        <span class="reply-sender">↳ Replying to ${message.replyTo.sender}</span>
+                        <span class="reply-snippet">${message.replyTo.snippet}</span>
+                    </div>
+                `;
+            }
+
+            // Get text for reply button
+            const replyTextSnippet = (message.text || message.imageUrl ? '📷 Image' : 'No text').replace(/'/g, "\\'");
 
             messageElement.innerHTML = `
                 <div class="message-header">
@@ -765,25 +1086,18 @@
                     </span>
                     <span class="timestamp">${formatTimestamp(message.timestamp)}</span>
                 </div>
+                <button class="reply-button" title="Reply" 
+                    onclick="window.startReply('${docId}', '${message.sender}', '${replyTextSnippet}')">
+                    ↩
+                </button>
+                ${replyHTML}
                 ${escapedText ? `<div class="message-text">${escapedText}</div>` : ''}
                 ${imageHTML}
             `;
 
             messagesContainer.appendChild(messageElement);
-            // Scrolling is handled at the end of setupMessageListener for initial load efficiency
-            
-            if (isNew && !isOwnMessage) {
-                showNotification(message.sender, message.text, !!message.imageUrl);
-                playNotificationSound();
-                
-                if (!isTabActive) {
-                    unreadCount++;
-                    updateTabTitle();
-                }
-            }
         }
 
-        // Send message (MODIFIED)
         async function sendMessage() {
             const text = messageInput.value.trim();
             if (!text && !selectedImageFile) return;
@@ -793,31 +1107,35 @@
                 isUploading = true;
                 sendButton.disabled = true;
                 imageButton.disabled = true;
-                emojiButton.disabled = true; // NEW
+                emojiButton.disabled = true;
                 messageInput.disabled = true;
 
                 let imageUrl = null;
 
                 if (selectedImageFile) {
-                    // Update: Use the correct container name
                     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
                     imagePreviewContainer.innerHTML = '<div class="uploading">📤 Uploading image...</div>';
                     imageUrl = await uploadImageToImgBB(selectedImageFile);
                 }
 
                 const messageText = text;
-                messageInput.value = '';
-                selectedImageFile = null;
-                imagePreviewContainer.innerHTML = '';
-                imageInput.value = '';
-
-                await addDoc(collection(db, 'groupChat', 'messages', 'chat'), {
+                const messageData = {
                     text: messageText,
                     sender: username,
                     timestamp: serverTimestamp(),
                     imageUrl: imageUrl,
-                    avatarUrl: currentUserAvatarUrl // NEW: Send current user's avatar
-                });
+                    avatarUrl: currentUserAvatarUrl,
+                    replyTo: currentReplyTo // NEW: Include replyTo data
+                };
+                
+                // Clear state before sending
+                messageInput.value = '';
+                selectedImageFile = null;
+                imagePreviewContainer.innerHTML = '';
+                imageInput.value = '';
+                window.clearReply(); // NEW: Clear reply state
+
+                await addDoc(collection(db, 'groupChat', 'messages', 'chat'), messageData);
 
             } catch (error) {
                 console.error('Error sending message:', error);
@@ -826,13 +1144,12 @@
                 isUploading = false;
                 sendButton.disabled = false;
                 imageButton.disabled = false;
-                emojiButton.disabled = false; // NEW
+                emojiButton.disabled = false;
                 messageInput.disabled = false;
                 messageInput.focus();
             }
         }
 
-        // Listen for new messages (MODIFIED for reliability)
         function setupMessageListener() {
             const messagesRef = collection(db, 'groupChat', 'messages', 'chat');
             const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -840,29 +1157,33 @@
             onSnapshot(q, (snapshot) => {
                 let initialLoadComplete = !isInitialLoad;
                 
-                // If it's the very first snapshot, clear the container before adding history
                 if (isInitialLoad) {
                     messagesContainer.innerHTML = '';
                     isInitialLoad = false;
                 }
-
+                
                 if (snapshot.empty && !initialLoadComplete) {
                     messagesContainer.innerHTML = '<div class="loading">No messages yet. Be the first to say hello!</div>';
                     return;
                 }
                 
-                // Iterate through changes to append messages
+                // Track IDs of all documents to prevent duplicates
+                const existingIds = new Set(Array.from(messagesContainer.children).map(el => el.getAttribute('data-doc-id')).filter(id => id));
+
                 snapshot.docChanges().forEach((change) => {
                     const message = change.doc.data();
+                    const docId = change.doc.id; // Get the Firestore Document ID
 
                     if (change.type === "added") {
-                        // isNew is true only for messages added *after* the initial history has been processed
-                        const isNew = initialLoadComplete;
-                        addMessageToChat(message, isNew);
+                        // Only add if it's not already in the DOM (prevents duplication during initial load)
+                        if (!existingIds.has(docId)) {
+                             const isNew = initialLoadComplete;
+                            addMessageToChat(message, docId, isNew);
+                            existingIds.add(docId);
+                        }
                     }
                 });
 
-                // Scroll to bottom after processing all changes
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             }, (error) => {
@@ -871,10 +1192,9 @@
             });
         }
         
-        // --- REMAINING UTILITY FUNCTIONS (UNMODIFIED) ---
+        // --- REMAINING UTILITY FUNCTIONS (UNMODIFIED FOR BREVITY, BUT KEPT) ---
         
-        // Request notification permission
-        async function requestNotificationPermission() { /* ... (Existing code) ... */
+        async function requestNotificationPermission() { 
              if (!('Notification' in window)) {
                 notificationStatus.textContent = '🔕 Notifications not supported';
                 return;
@@ -896,8 +1216,7 @@
             }
         }
 
-        // Show notification
-        function showNotification(sender, text, hasImage) { /* ... (Existing code) ... */
+        function showNotification(sender, text, hasImage) { 
              if (!notificationsEnabled || isTabActive || sender === username) return;
 
             try {
@@ -920,8 +1239,7 @@
             }
         }
 
-        // Play notification sound
-        function playNotificationSound() { /* ... (Existing code) ... */
+        function playNotificationSound() { 
              if (isTabActive || !notificationsEnabled) return;
             
             try {
@@ -945,8 +1263,7 @@
             }
         }
 
-        // Update tab title with unread count
-        function updateTabTitle() { /* ... (Existing code) ... */
+        function updateTabTitle() { 
              if (unreadCount > 0 && !isTabActive) {
                 document.title = `(${unreadCount}) ${originalTitle}`;
             } else {
@@ -954,8 +1271,7 @@
             }
         }
 
-        // Track tab visibility
-        document.addEventListener('visibilitychange', () => { /* ... (Existing code) ... */
+        document.addEventListener('visibilitychange', () => { 
              isTabActive = !document.hidden;
             if (isTabActive) {
                 unreadCount = 0;
@@ -963,23 +1279,21 @@
             }
         });
 
-        window.addEventListener('focus', () => { /* ... (Existing code) ... */
+        window.addEventListener('focus', () => { 
              isTabActive = true;
             unreadCount = 0;
             updateTabTitle();
         });
 
-        window.addEventListener('blur', () => { /* ... (Existing code) ... */
+        window.addEventListener('blur', () => { 
              isTabActive = false;
         });
 
-        // Show image preview
-        function showImagePreview(file) { /* ... (Existing code) ... */
+        function showImagePreview(file) { 
             selectedImageFile = file;
             const reader = new FileReader();
             
             reader.onload = (e) => {
-                // Get the image preview container by its ID
                 const imagePreviewContainer = document.getElementById('imagePreviewContainer');
                 
                 imagePreviewContainer.innerHTML = `
@@ -995,14 +1309,12 @@
             reader.readAsDataURL(file);
         }
 
-        // Remove image preview
-        window.removeImagePreview = function() { /* ... (Existing code) ... */
+        window.removeImagePreview = function() { 
              selectedImageFile = null;
             document.getElementById('imagePreviewContainer').innerHTML = '';
             document.getElementById('imageInput').value = '';
         };
 
-        // Handle image selection
         document.getElementById('imageButton').addEventListener('click', () => {
             document.getElementById('imageInput').click();
         });
@@ -1018,8 +1330,7 @@
             }
         });
 
-        // Show full-size image
-        window.showFullImage = function(url) { /* ... (Existing code) ... */
+        window.showFullImage = function(url) { 
             const modal = document.createElement('div');
             modal.className = 'image-modal';
             modal.innerHTML = `<img src="${url}" alt="Full size image">`;
@@ -1027,8 +1338,7 @@
             document.body.appendChild(modal);
         };
 
-        // Validate username
-        function validateUsername(name) { /* ... (Existing code) ... */
+        function validateUsername(name) { 
             const trimmed = name.trim();
             if (trimmed.length === 0) {
                 return 'Username cannot be empty';
@@ -1045,8 +1355,7 @@
             return null;
         }
 
-        // Show error message
-        function showError(message) { /* ... (Existing code) ... */
+        function showError(message) { 
             const errorElement = document.createElement('div');
             errorElement.className = 'error';
             errorElement.textContent = message;
@@ -1054,7 +1363,7 @@
             setTimeout(() => errorElement.remove(), 5000);
         }
 
-        // Event listeners (UPDATED to include emoji and correct element names)
+        // Event listeners
         joinChatButton.addEventListener('click', joinChat);
         usernameInput.addEventListener('keypress', (e) => {
             usernameError.textContent = '';
